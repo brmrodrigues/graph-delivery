@@ -1,9 +1,6 @@
 package main.java.com.brmrodrigues.graph.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Graph {
 
@@ -70,6 +67,49 @@ public class Graph {
         this.existsVertexOrThrow(vertex);
         int vertexIndex = this.labelsWithIndex.get(vertex);
         return this.adjacencyMatrix.getAdjacencies(vertexIndex);
+    }
+
+    private Vertex getNextVertex(Vertex vertex, LinkedHashSet visitedVertexes) {
+        List<Vertex> adjacencies = getAdjacencies(vertex.getLabel());
+
+        for(int i = 0; i < adjacencies.size(); i++) {
+            Vertex adjacency = adjacencies.get(i);
+            if (!visitedVertexes.contains(adjacency.getLabel())) { // not visited yet
+                return adjacency;
+            }
+        }
+        return null;
+    }
+
+    public Graph depthGeneratedTree() throws Exception {
+        Graph tree = new Graph();
+        Stack<Vertex> currentPath = new Stack<>();
+        LinkedHashSet<String> visitedVertexes = new LinkedHashSet<>();
+        List<Vertex> vertexes = getVertexes();
+
+        for(Vertex v : vertexes) {
+            tree.addVertex(v.getLabel());
+        }
+
+        Vertex sourceVertex = vertexes.get(0);
+        visitedVertexes.add(sourceVertex.getLabel());
+        currentPath.push(sourceVertex);
+
+        while(!currentPath.empty()) {
+            Vertex currentVertex = currentPath.peek();
+            Vertex nextVertex = getNextVertex(currentVertex, visitedVertexes);
+
+            if (nextVertex == null) {
+                currentPath.pop();
+            } else {
+                String label = nextVertex.getLabel();
+                visitedVertexes.add(label);
+                currentPath.push(nextVertex);
+                tree.linkVertexes(currentVertex.getLabel(), nextVertex.getLabel());
+            }
+        }
+
+        return tree;
     }
 
     public Vertex getVertex(String label) {
