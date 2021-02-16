@@ -1,5 +1,6 @@
 package main.java.com.brmrodrigues.application;
 
+import main.java.com.brmrodrigues.graph.core.Digraph;
 import main.java.com.brmrodrigues.graph.core.Graph;
 import main.java.com.brmrodrigues.graph.core.Vertex;
 import main.java.com.brmrodrigues.graph.search.BreadthFirstSearch;
@@ -33,9 +34,9 @@ public class Main {
         graphLetters.addVertex("C");
         graphLetters.addVertex("D");
 
-        graphLetters.linkVertexes("A", "B");
-        graphLetters.linkVertexes("A", "C");
-        graphLetters.linkVertexes("A", "D");
+        graphLetters.linkVertexes("A", "B", null);
+        graphLetters.linkVertexes("A", "C", null);
+        graphLetters.linkVertexes("A", "D", null);
 
         System.out.println("Vertex A degree: " + graphLetters.getVertex("A").getDegree());
         System.out.println("Vertex C degree: " + graphLetters.getVertex("C").getDegree());
@@ -57,19 +58,19 @@ public class Main {
         searchGraph.addVertex("H");
         searchGraph.addVertex("I");
 
-        searchGraph.linkVertexes("A", "B");
-        searchGraph.linkVertexes("A", "C");
-        searchGraph.linkVertexes("A", "D");
-        searchGraph.linkVertexes("B", "F");
-        searchGraph.linkVertexes("B", "I");
-        searchGraph.linkVertexes("D", "E");
-        searchGraph.linkVertexes("D", "I");
-        searchGraph.linkVertexes("D", "G");
-        searchGraph.linkVertexes("I", "A");
-        searchGraph.linkVertexes("I", "D");
-        searchGraph.linkVertexes("I", "C");
-        searchGraph.linkVertexes("I", "H");
-        searchGraph.linkVertexes("E", "A");
+        searchGraph.linkVertexes("A", "B", null);
+        searchGraph.linkVertexes("A", "C", null);
+        searchGraph.linkVertexes("A", "D", null);
+        searchGraph.linkVertexes("B", "F", null);
+        searchGraph.linkVertexes("B", "I", null);
+        searchGraph.linkVertexes("D", "E", null);
+        searchGraph.linkVertexes("D", "I", null);
+        searchGraph.linkVertexes("D", "G", null);
+        searchGraph.linkVertexes("I", "A", null);
+        searchGraph.linkVertexes("I", "D", null);
+        searchGraph.linkVertexes("I", "C", null);
+        searchGraph.linkVertexes("I", "H", null);
+        searchGraph.linkVertexes("E", "A", null);
 
         List<String> dfsPath = DepthFirstSearch.getInstance().search(searchGraph, "B", "G");
         System.out.println("Path by DFS:");
@@ -96,6 +97,84 @@ public class Main {
             for(Vertex adj : tree.getAdjacencies(v.getLabel())) {
                 System.out.println("\t" + v.getLabel() + "--" + adj.getLabel());
             }
+        }
+
+        // Weighted Graph
+        Graph weightedGraph = new Graph();
+
+        weightedGraph.addVertex("A");
+        weightedGraph.addVertex("B");
+        weightedGraph.addVertex("C");
+        weightedGraph.addVertex("D");
+        weightedGraph.addVertex("E");
+
+        weightedGraph.linkVertexes("A", "B", 12);
+        weightedGraph.linkVertexes("C", "E", 10);
+        weightedGraph.linkVertexes("B", "D", 5);
+        weightedGraph.linkVertexes("D", "A", 2);
+        weightedGraph.linkVertexes("B", "E", 1);
+        weightedGraph.linkVertexes("A", "C", 7);
+
+        System.out.println("AC weight: " + weightedGraph.getWeight("A", "C"));
+        System.out.println("BE weight: " + weightedGraph.getWeight("B", "E"));
+
+        // Digraph
+        Digraph digraph = new Digraph();
+        digraph.addVertex("RJ");
+        digraph.addVertex("SP");
+        digraph.addVertex("BH");
+        digraph.addVertex("PT");
+        digraph.addVertex("OS");
+        digraph.addVertex("SV");
+        digraph.addVertex("CR");
+        digraph.addVertex("PA");
+
+        digraph.linkVertexes("RJ", "SP", null);
+        digraph.linkVertexes("RJ", "BH", null);
+        digraph.linkVertexes("RJ", "PT", null);
+        digraph.linkVertexes("RJ", "PA", null);
+        digraph.linkVertexes("SP", "BH", null);
+        digraph.linkVertexes("SP", "OS", null);
+        digraph.linkVertexes("SP", "SV", null);
+        digraph.linkVertexes("SP", "CR", null);
+        digraph.linkVertexes("SP", "PA", null);
+        digraph.linkVertexes("SV", "PA", null);
+        digraph.linkVertexes("CR", "PA", null);
+
+        Graph digraphTree = digraph.depthGeneratedTree("PT");
+        System.out.println("\nDigraph Tree");
+        printGraph(digraphTree);
+
+        Digraph weightedDigraph = new Digraph();
+        weightedDigraph.addVertex("X");
+        weightedDigraph.addVertex("Y");
+        weightedDigraph.addVertex("Z");
+        weightedDigraph.addVertex("W");
+        weightedDigraph.addVertex("V");
+
+        weightedDigraph.linkVertexes("X", "V", 44);
+        weightedDigraph.linkVertexes("Y", "W", 37);
+        weightedDigraph.linkVertexes("W", "Z", 38);
+        weightedDigraph.linkVertexes("X", "V", 16);
+        weightedDigraph.linkVertexes("V", "X", 22);
+        weightedDigraph.linkVertexes("V", "Y", 57);
+
+        System.out.println("\nWeighted Digraph");
+        printGraph(weightedDigraph);
+    }
+
+    public static void printGraph(Graph graph) {
+        for (Vertex v : graph.getVertexes()) {
+            System.out.print("Vertex " + v.getLabel() + ":");
+            List<Vertex> adjacencies = graph.getAdjacencies(v.getLabel());
+            if (!adjacencies.isEmpty()) {
+                for (Vertex adj : adjacencies) {
+                    System.out.print(adj.getLabel() + "(" + graph.getWeight(v.getLabel(), adj.getLabel()) + "), ");
+                }
+            } else {
+                System.out.print("-");
+            }
+            System.out.println();
         }
     }
 

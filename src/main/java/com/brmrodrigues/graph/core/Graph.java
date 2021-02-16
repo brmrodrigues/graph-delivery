@@ -23,7 +23,7 @@ public class Graph {
         hasVertexMaxNumber = true;
     }
 
-    private boolean existsVertex(String vertexLabel) {
+    boolean existsVertex(String vertexLabel) {
         int index = this.labelsWithIndex.get(vertexLabel);
         return this.vertexes.get(index) != null;
     }
@@ -35,9 +35,16 @@ public class Graph {
         return true;
     }
 
-    private void createAdjacencyMatrix() {
+    void createAdjacencyMatrix() throws Exception {
         if (this.adjacencyMatrix == null) {
             this.adjacencyMatrix = new AdjacencyMatrix(new ArrayList<>(this.vertexes));
+        } else {
+            int matrixNumberOfVertex = this.adjacencyMatrix.getNumberOfVertexes();
+            if (this.vertexes.size() != matrixNumberOfVertex) {
+                AdjacencyMatrix tmpAdjMatrix = new AdjacencyMatrix(this.vertexes);
+                this.adjacencyMatrix.copyValuesTo(tmpAdjMatrix);
+                this.adjacencyMatrix = tmpAdjMatrix;
+            }
         }
     }
 
@@ -52,15 +59,15 @@ public class Graph {
         }
     }
 
-    public void linkVertexes(String sourceVertexLabel, String targetVertexLabel) throws Exception {
+    public void linkVertexes(String sourceVertexLabel, String targetVertexLabel, Integer weight) throws Exception {
         if (!this.existsVertex(sourceVertexLabel) ||
                 !this.existsVertex(targetVertexLabel)) {
             throw new Exception("Both source and target vetexes must exist in order to add an edge");
         }
         createAdjacencyMatrix();
-        int sourceVertexIndex = this.labelsWithIndex.get(targetVertexLabel);
-        int targetVertexIndex = this.labelsWithIndex.get(sourceVertexLabel);
-        this.adjacencyMatrix.addEdge(sourceVertexIndex, targetVertexIndex);
+        int sourceVertexIndex = this.labelsWithIndex.get(sourceVertexLabel);
+        int targetVertexIndex = this.labelsWithIndex.get(targetVertexLabel);
+        this.adjacencyMatrix.addDirectedEdge(sourceVertexIndex, targetVertexIndex, weight);
     }
 
     public List<Vertex> getAdjacencies(String vertex) {
@@ -105,17 +112,32 @@ public class Graph {
                 String label = nextVertex.getLabel();
                 visitedVertexes.add(label);
                 currentPath.push(nextVertex);
-                tree.linkVertexes(currentVertex.getLabel(), nextVertex.getLabel());
+                tree.linkVertexes(currentVertex.getLabel(), nextVertex.getLabel(), null);
             }
         }
 
         return tree;
     }
 
+    public int getWeight(String sourceVertexLabel, String targetVertexLabel) {
+        int sourceVertexIndex = labelsWithIndex.get(sourceVertexLabel);
+        int targetVertexIndex = labelsWithIndex.get(targetVertexLabel);
+
+        return adjacencyMatrix.getWeight(sourceVertexIndex, targetVertexIndex);
+    }
+
     public Vertex getVertex(String label) {
         this.existsVertexOrThrow(label);
         int index = this.labelsWithIndex.get(label);
         return this.vertexes.get(index);
+    }
+
+    Map<String, Integer> getLabelsWithIndex() {
+        return labelsWithIndex;
+    }
+
+    AdjacencyMatrix getAdjacencyMatrix() {
+        return adjacencyMatrix;
     }
 
     public List<Vertex> getVertexes() {
