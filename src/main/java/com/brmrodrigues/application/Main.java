@@ -6,6 +6,7 @@ import main.java.com.brmrodrigues.graph.core.Vertex;
 import main.java.com.brmrodrigues.graph.search.BreadthFirstSearch;
 import main.java.com.brmrodrigues.graph.search.DepthFirstSearch;
 import main.java.com.brmrodrigues.graph.util.Dijkstra;
+import main.java.com.brmrodrigues.graph.util.FloydMarshall;
 
 import java.util.List;
 import java.util.Map;
@@ -173,6 +174,21 @@ public class Main {
             String ancestor = info.ancestor == null ? "" : info.ancestor.getLabel();
             System.out.println(key + " : " + info.distance + " - " + ancestor);
         }
+
+        System.out.println();
+
+        // FloydMarshall
+        Map<String, Map<String, FloydMarshall.Info>> matrix = FloydMarshall.getInstance().process(weightedDigraph);
+        for(String v : matrix.keySet()) {
+            System.out.println("Vertex " + v);
+            Map<String, FloydMarshall.Info> row = matrix.get(v);
+            for (String u : row.keySet()) {
+                FloydMarshall.Info info = row.get(u);
+                System.out.println(u + " with distance " + info.distance + " through " + info.throughVertex.getLabel());
+            }
+            System.out.println();
+        }
+
     }
 
     public static void printGraph(Graph graph) {
