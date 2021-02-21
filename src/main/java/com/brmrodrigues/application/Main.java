@@ -5,8 +5,11 @@ import main.java.com.brmrodrigues.graph.core.Graph;
 import main.java.com.brmrodrigues.graph.core.Vertex;
 import main.java.com.brmrodrigues.graph.search.BreadthFirstSearch;
 import main.java.com.brmrodrigues.graph.search.DepthFirstSearch;
+import main.java.com.brmrodrigues.graph.util.Dijkstra;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class Main {
 
@@ -161,6 +164,15 @@ public class Main {
 
         System.out.println("\nWeighted Digraph");
         printGraph(weightedDigraph);
+
+        // Dijkstra
+        Map<String, Dijkstra.Info> shortestPaths = Dijkstra.getInstance().process("X", "Y", weightedDigraph);
+        Set<String> keys = shortestPaths.keySet();
+        for(String key : keys) {
+            Dijkstra.Info info = shortestPaths.get(key);
+            String ancestor = info.ancestor == null ? "" : info.ancestor.getLabel();
+            System.out.println(key + " : " + info.distance + " - " + ancestor);
+        }
     }
 
     public static void printGraph(Graph graph) {
