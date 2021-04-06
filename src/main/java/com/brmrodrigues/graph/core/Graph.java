@@ -10,17 +10,24 @@ public class Graph {
     private Map<String, Integer> labelsWithIndex = new HashMap<>();
     private List<Vertex> vertexes = new ArrayList<>();
     private AdjacencyMatrix adjacencyMatrix;
+    private boolean isDirected;
 
     public Graph() {
         vertexMaxNumber = 10;
     }
 
-    public Graph(int vertexMaxNumber) throws Exception {
+    public Graph(boolean isDirected) {
+        vertexMaxNumber = 10;
+        this.isDirected = isDirected;
+    }
+
+    public Graph(int vertexMaxNumber, boolean isDirected) throws Exception {
         if (vertexMaxNumber < 1) {
             throw new IllegalArgumentException("The number of vertexes must be greater than zero");
         }
         this.vertexMaxNumber = vertexMaxNumber;
         hasVertexMaxNumber = true;
+        this.isDirected = isDirected;
     }
 
     boolean existsVertex(String vertexLabel) {
@@ -67,7 +74,11 @@ public class Graph {
         createAdjacencyMatrix();
         int sourceVertexIndex = this.labelsWithIndex.get(sourceVertexLabel);
         int targetVertexIndex = this.labelsWithIndex.get(targetVertexLabel);
-        this.adjacencyMatrix.addDirectedEdge(sourceVertexIndex, targetVertexIndex, weight);
+        if (isDirected) {
+            this.adjacencyMatrix.addDirectedEdge(sourceVertexIndex, targetVertexIndex, weight);
+        } else {
+            this.adjacencyMatrix.addEdge(sourceVertexIndex, targetVertexIndex, weight);
+        }
     }
 
     public List<Vertex> getAdjacencies(String vertex) {

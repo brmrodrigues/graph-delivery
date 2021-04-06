@@ -32,7 +32,7 @@ public class Main {
         }
 
         // Adjacency Matrix
-        Graph graphLetters = new Graph();
+        Graph graphLetters = new Graph(true);
 
         graphLetters.addVertex("A");
         graphLetters.addVertex("B");
@@ -51,7 +51,7 @@ public class Main {
         printVertexAdjacencies(graphLetters, "C");
 
         // SEARCH
-        Graph searchGraph = new Graph();
+        Graph searchGraph = new Graph(true);
 
         searchGraph.addVertex("A");
         searchGraph.addVertex("B");
@@ -105,7 +105,7 @@ public class Main {
         }
 
         // Weighted Graph
-        Graph weightedGraph = new Graph();
+        Graph weightedGraph = new Graph(true);
 
         weightedGraph.addVertex("A");
         weightedGraph.addVertex("B");
