@@ -7,6 +7,7 @@ import main.java.com.brmrodrigues.graph.search.BreadthFirstSearch;
 import main.java.com.brmrodrigues.graph.search.DepthFirstSearch;
 import main.java.com.brmrodrigues.graph.util.Dijkstra;
 import main.java.com.brmrodrigues.graph.util.FloydMarshall;
+import main.java.com.brmrodrigues.graph.util.Prim;
 
 import java.util.List;
 import java.util.Map;
@@ -188,6 +189,31 @@ public class Main {
             }
             System.out.println();
         }
+
+        // Prim
+        System.out.println("PRIM");
+        Graph primGraph = new Graph();
+        primGraph.addVertex("A");
+        primGraph.addVertex("B");
+        primGraph.addVertex("C");
+        primGraph.addVertex("D");
+        primGraph.addVertex("E");
+        primGraph.addVertex("F");
+
+        primGraph.linkVertexes("A", "B", 6);
+        primGraph.linkVertexes("A", "C", 1);
+        primGraph.linkVertexes("A", "D", 5);
+        primGraph.linkVertexes("B", "C", 2);
+        primGraph.linkVertexes("B", "E", 5);
+        primGraph.linkVertexes("C", "E", 6);
+        primGraph.linkVertexes("C", "F", 4);
+        primGraph.linkVertexes("C", "D", 2);
+        primGraph.linkVertexes("D", "F", 4);
+        primGraph.linkVertexes("E", "F", 3);
+
+        String root = "A";
+        Digraph mst = Prim.getInstance().process(root, primGraph);
+        printGraph(mst);
 
     }
 
